@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "ds-test/test.sol";
+import "forge-std/Test.sol";
 import "../src/Counter.sol";
 
 contract User {
-    function callOnlyOwner(Blacksmith b) public {
-        b.onlyOwner();
+    function callOnlyOwner(Counter c) public {
+        c.onlyOwner();
     }
 }
 
 contract CounterTest is DSTest {
-    Blacksmith blacksmith;
+    Counter counter;
     User user;
 
     function setUp() public {
-        blacksmith = new Blacksmith(address(this));
+        counter = new Counter(address(this));
         user = new User();
     }
 
     function testOwner() public {
-        assertEq(blacksmith.owner(), address(this));
+        assertEq(counter.owner(), address(this));
     }
 
     function testFailOwner() public {
-        user.callOnlyOwner(blacksmith);
+        user.callOnlyOwner(counter);
     }
 
-    function testWrongOwner() public {
-        user.callOnlyOwner(blacksmith); // This test will fail
-    }
+    // function testWrongOwner() public {
+    //     user.callOnlyOwner(counter); // This test will fail
+    // }
 }
