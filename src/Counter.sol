@@ -2,13 +2,13 @@
 pragma solidity ^0.8.13;
 
 contract Counter {
-    uint256 public number;
+    address public owner;
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
+    constructor(address _owner) {
+        owner = _owner;
     }
 
-    function increment() public {
-        number++;
+    function onlyOwner() public view {
+        require(msg.sender == owner, "Not the owner");
     }
 }
