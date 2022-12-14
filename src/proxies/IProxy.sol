@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity 0.8.17;
 
 /// @title IProxy - Helper interface to access masterCopy of the Proxy on-chain
 interface IProxy {
