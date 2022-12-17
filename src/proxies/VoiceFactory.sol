@@ -7,19 +7,12 @@ contract VoiceFactory {
     /// @dev Emitted when a new one is created.
     event CreateProxy(Proxy proxy);
 
-    function newVoice(
-        string memory metadata,
+    function createProxyWithNonce(
+        address singleton,
         bytes memory initializer,
-        uint256 soltNonce /** onlyOwner */
-    ) external {
-        createProxyWithNonce(initializer, soltNonce);
-    }
-
-    function createProxyWithNonce(bytes memory initializer, uint256 saltNonce)
-        internal
-        returns (Proxy proxy)
-    {
-        proxy = deployProxyWithNonce(initializer, saltNonce);
+        uint256 saltNonce
+    ) external returns (Proxy proxy) {
+        proxy = deployProxyWithNonce(singleton, initializer, saltNonce);
         if (initializer.length > 0)
             // solhint-disable-next-line no-inline-assembly
             assembly {
@@ -46,7 +39,8 @@ contract VoiceFactory {
     /// @param initializer Payload for message call sent to new proxy contract.
     /// @param saltNonce Nonce that will be used to generate the salt to calculate the address of the new proxy contract.
     function deployProxyWithNonce(
-\        bytes memory initializer,
+        address singleton,
+        bytes memory initializer,
         uint256 saltNonce
     ) internal returns (Proxy proxy) {
         // If the initializer changes the proxy address should change too. Hashing the initializer data is cheaper than just concatinating it
@@ -55,7 +49,7 @@ contract VoiceFactory {
         );
         bytes memory deploymentData = abi.encodePacked(
             type(Proxy).creationCode,
-            uint256(uint160(accessor))
+            uint256(uint160(singleton))
         );
         // solhint-disable-next-line no-inline-assembly
         assembly {
